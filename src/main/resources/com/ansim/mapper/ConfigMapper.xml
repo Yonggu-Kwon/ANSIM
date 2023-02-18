@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ansim.mapper.ConfigMapper">
+    <select id="listSystemConfig" resultType="com.ansim.app.factory.SystemConfigVO">
+        SELECT
+            *
+        FROM
+            table_system_config
+        WHERE
+            category = #{category}
+    </select>
+
+    <select id="readSystemConfig" resultType="com.ansim.app.factory.SystemConfigVO">
+        SELECT
+            *
+        FROM
+            table_system_config
+        WHERE
+            category = #{category}
+          and
+            name = #{name}
+            LIMIT 1 OFFSET 0
+    </select>
+
+    <update id="updateSystemConfig">
+        UPDATE table_system_config
+        SET
+            value = #{value}
+        WHERE
+            category = #{category}
+          AND
+            name = #{name}
+    </update>
+
+    <insert id="insertSystemConfig">
+        INSERT INTO table_system_config
+            (category, name, value)
+        VALUES
+            (#{category}, #{name}, #{value})
+    </insert>
+</mapper>

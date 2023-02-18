@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>사용자 등록 알림</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="800px" id="bodyTable" style="border: 0px">
+    <tr style="height:45px;text-align: left; ">
+        <td style="font-size:16px;  font-weight:bold ;height:55px;vertical-align: top; "><img src="cid:mail_logo" alt="Logo" width="150px" style="padding: 15px 5px 0 0"> </td>
+    </tr>
+    <tr>
+        <td>
+            <!-- 600px - 800px CONTENTS CONTAINER TABLE -->
+            <table border="0" cellpadding="0" cellspacing="0" width="800">
+                <tr>
+                    <td>
+                        <h1>${app} 사용자 등록 알림 </h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>${userId}(${userName})</b>님께서 [${app}]에 등록되었습니다.<br><br>
+                        <b>"다운로드"</b> 버튼을 클릭하여 에이전트 프로그램을 설치한 후 사용할 수 있습니다. 에이전트 설치코드는 다음과 같습니다.<br><br>
+                        <h2>설치코드 : ${code}</h2>
+                        2단계 인증을 사용하는 경우 다음의 QR코드 또는 OTP키를 Google OTP앱에 등록한 후 랜덤하게 생성되는 일회용 인증코드를 사용하십시오.<br><br>
+                        <img src="cid:otp_png" width="200px"><br><br>
+                        <h2>${otpKey}</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="${url}" style=" width: 120px; margine-right: 5px; padding:10px 45px; font-family: sans-serif; font-size: 15px; font-weight: bold; line-height: 40px; background-color: #206bc4; color: #ffffff; text-decoration: none; border: 1px solid  #206bc4; border-radius: 3px; -webkit-text-size-adjust: none;">
+                            ${app}으로 이동
+                        </a>
+
+                        <a href="${download}" style=" width: 120px; margine-left: 5px; padding:10px 45px; font-family: sans-serif; font-size: 15px; font-weight: bold; line-height: 40px; background-color: #206bc4; color: #ffffff; text-decoration: none; border: 1px solid  #206bc4; border-radius: 3px; -webkit-text-size-adjust: none;">
+                            다운로드
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="color: #9e9e9e; font-size: small">
+                        <br><br>
+                        Powered by @${app}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

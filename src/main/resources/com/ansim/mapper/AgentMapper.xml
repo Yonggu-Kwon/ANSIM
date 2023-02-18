@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ansim.mapper.AgentMapper">
+    <insert id="issueAgent">
+        insert into table_agent
+        (agentid, userid, version, type, path, status, code, deletable, createdate, approvedate, stopdate, deletedate)
+        values
+        (#{agentId}, #{userId}, null, null, null, 'I', #{code}, '0', null, null, null, null)
+    </insert>
+</mapper>

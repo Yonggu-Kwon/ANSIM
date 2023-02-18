@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ansim.mapper.MemberMapper">
+    <resultMap type="com.ansim.app.domain.MemberVO" id="memberMap">
+        <id     property="userId"       column="userId"/>
+        <result property="userName"     column="userName"/>
+        <result property="password"     column="password"/>
+        <result property="email"        column="email"/>
+        <result property="cellNo"       column="cellNo"/>
+        <result property="uuid"         column="uuid"/>
+        <result property="otpKey"       column="otpKey"/>
+        <result property="positionId"   column="positionId"/>
+        <result property="status"       column="status"/>
+        <result property="salt"         column="salt"/>
+        <result property="createDate"   column="createDate"/>
+        <result property="updateDate"   column="updateDate"/>
+        <result property="deleteDate"   column="deleteDate"/>
+
+        <association
+                property="position"
+                column="{userId = userId}"
+                javaType="com.ansim.app.domain.PositionVO"
+                select="getMemberPosition"
+        />
+
+        <collection
+                property="authList"
+                column="{userId = userId}"
+                javaType="java.util.ArrayList"
+                ofType="com.ansim.app.domain.AuthVO"
+                select="getMemberAuthList"
+        />
+    </resultMap>
+
+    <select id="getMemberPosition" resultType="com.ansim.app.domain.PositionVO">
+        select * from table_position where userid = #{userId}
+    </select>
+
+    <select id="getMemberAuthList" resultType="com.ansim.app.domain.AuthVO">
+        select * from table_auth where userid = #{userId}
+    </select>
+
+    <select id="isInstalled" resultType="boolean">
+        <![CDATA[
+        select
+            if(count(*) > 0, 1, 0)
+        from
+            table_member member
+            inner join
+            table_agent agent
+            on member.userid = agent.userid
+        where
+            agent.createdate is not null
+            and
+            agent.status = 'N'
+        ]]>
+    </select>
+
+    <select id="readMember" resultMap="memberMap">
+        select
+            *
+        from
+            table_member
+        where
+            1 = 1
+        <if test="userId != null and userId != ''.toString()">
+            and
+            userid = #{userId}
+        </if>
+        <if test="email != null and email != ''.toString()">
+            and
+            email = #{email}
+        </if>
+        <if test="includeDeleted == false">
+            and
+            deletedate is null
+        </if>
+    </select>
+
+    <insert id="insertMemberAuth">
+        insert into table_auth
+        (userid, auth, createdate)
+        values
+        (#{userId}, #{auth}, now())
+    </insert>
+
+    <delete id="deleteMemberAuth">
+        delete from table_auth where userid = #{userId} and auth = #{auth}
+    </delete>
+
+    <insert id="insertMember">
+        insert into table_member
+            (userid, username, password, email, cellno, uuid, otpkey, positionid, status, salt, createdate, updatedate, deletedate)
+        values
+            (#{userId}, #{userName}, #{password}, #{email}, #{cellNo}, #{uuid}, #{otpKey}, #{positionId}, #{status}, now(), now(), null);
+
+        <if test="authList">
+            <foreach collection="authList" item="auth" index="index">
+                insert into table_auth
+                (userid, auth, createdate)
+                values
+                (#{userId}, #{auth}, now());
+            </foreach>
+        </if>
+    </insert>
+</mapper>

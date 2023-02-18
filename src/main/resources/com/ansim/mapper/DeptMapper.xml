@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ansim.mapper.DeptMapper">
+    <resultMap type="com.ansim.app.domain.MemberVO" id="memberMap">
+        <id     property="userId"       column="userId"/>
+        <result property="userName"     column="userName"/>
+        <result property="password"     column="password"/>
+        <result property="email"        column="email"/>
+        <result property="cellNo"       column="cellNo"/>
+        <result property="uuid"         column="uuid"/>
+        <result property="otpKey"       column="otpKey"/>
+        <result property="positionId"   column="positionId"/>
+        <result property="status"       column="status"/>
+        <result property="salt"         column="salt"/>
+        <result property="createDate"   column="createDate"/>
+        <result property="updateDate"   column="updateDate"/>
+        <result property="deleteDate"   column="deleteDate"/>
+
+        <association
+                property="position"
+                column="{userId = userId}"
+                javaType="com.ansim.app.domain.PositionVO"
+                select="getMemberPosition"
+        />
+
+        <collection
+                property="authList"
+                column="{userId = userId}"
+                javaType="java.util.ArrayList"
+                ofType="com.ansim.app.domain.AuthVO"
+                select="getMemberAuthList"
+        />
+    </resultMap>
+
+    <resultMap type="com.ansim.app.domain.DeptVO" id="deptMap">
+        <id     property="deptId"       column="deptId"/>
+        <result property="deptCode"     column="deptCode"/>
+        <result property="pid"          column="pid"/>
+        <result property="parent"       column="parent"/>
+        <result property="chiefId"      column="chiefId"/>
+        <result property="name"         column="name"/>
+        <result property="lft"          column="lft"/>
+        <result property="rgt"          column="rgt"/>
+        <result property="enabled"      column="enabled"/>
+        <result property="createDate"   column="createDate"/>
+        <result property="updateDate"   column="updateDate"/>
+
+        <association
+                property="parentDept"
+                column="{pid = pid}"
+                javaType="Map"
+                select="getDeptInfoById"
+        />
+
+        <association
+                property="chiefInfo"
+                column="{userId = chiefId"
+                javaType="Map"
+                select="getMemberInfo"
+        />
+
+        <collection
+                property="memberList"
+                column="{deptId = deptId}"
+                javaType="java.util.ArrayList"
+                ofType="Map"
+                select="getDeptMemberList"
+        />
+
+        <collection
+                property="managerList"
+                column="{deptId = deptId}"
+                javaType="java.util.ArrayList"
+                ofType="Map"
+                select="getDeptManagerList"
+        />
+
+    </resultMap>
+
+    <resultMap type="HashMap" id="parentMap">
+        <id     property="deptId"       column="deptId"/>
+        <result property="name"         column="name"/>
+        <result property="deptCode"     column="deptCode"/>
+        <result property="fullPath"     column="fullPath"/>
+    </resultMap>
+
+    <select id="getDeptManagerList" resultMap="memberMap">
+        select
+            member.*
+        from
+            table_dept_admin da
+            inner join
+            table_member member
+            on da.userid = member.userid
+            left outer join
+            table_position pos
+            on pos.positionid = member.positionid
+        where
+            da.deptid = #{deptId}
+        order by
+            pos.pcode, member.username
+    </select>
+
+    <select id="getDeptMemberList" resultMap="memberMap">
+        select
+            member.*
+        from
+            table_dept_member dm
+            inner join
+            table_member member
+            on dm.userid = member.userid
+            left outer join
+            table_position pos
+            on pos.positionid = member.positionid
+        where
+            dm.deptid = #{deptId}
+        order by
+            pos.pcode, member.username
+    </select>
+
+    <select id="getDeptInfoById" resultMap="parentMap">
+        select
+            de.deptid,
+            de.name,
+            de.deptcode,
+            ifnull(de.fullPath, de.name) as fullPath
+        from
+            (
+                select
+                    (
+                        select
+                            group_concat(p.name order by p.lft separator ' / ')
+                        from
+                            table_dept as d,
+                            table_dept as p
+                        where
+                            mbrwithin(d.area, p.area)
+                          and
+                            d.deptid = dept.deptid
+                          and
+                            p.deptid != '1'
+                ) as fullPath,
+                dept.name,
+                dept.deptcode,
+                dept.deptid
+                from
+                    table_dept as dept,
+                    table_dept as parent,
+                    table_dept as sub_parent,
+                    (
+                        select
+                            dept.name,
+                            (count(parent.name) - 1) as depth
+                        from
+                            table_dept as dept,
+                            table_dept as parent
+                        where
+                            mbrwithin(dept.area, parent.area)
+                            and
+                            dept.deptid = '1'
+                        group by
+                            dept.deptid
+                        order by
+                            dept.lft
+                    ) as sub_tree
+        where
+            mbrwithin(dept.area, parent.area)
+          and
+            mbrwithin(dept.area, sub_parent.area)
+          and
+            sub_parent.name = sub_tree.name
+        group by
+            dept.deptid
+        order by
+            dept.lft
+            ) AS de
+        where
+            de.deptid = #{pid}
+    </select>
+
+    <select id="getMemberInfo" resultMap="memberMap">
+        select * from table_member where userid = #{userId}
+    </select>
+
+    <select id="getMemberPosition" resultType="com.ansim.app.domain.PositionVO">
+        select * from table_position where userid = #{userId}
+    </select>
+
+    <select id="getMemberAuthList" resultType="com.ansim.app.domain.AuthVO">
+        select * from table_auth where userid = #{userId}
+    </select>
+
+    <select id="readDept" resultMap="deptMap">
+        select
+            deptid,
+            deptcode,
+            pid,
+            parent,
+            chiefid,
+            name,
+            lft,
+            rgt,
+            area,
+            enabled,
+            createdate,
+            updatedate
+        from
+            table_dept
+        where
+            deptid = #{deptId}
+    </select>
+
+    <insert id="insertRoot">
+        insert into table_dept
+            (deptid, deptcode, pid, parent, chiefid, name, lft, rgt, area, enabled, createdate, updatedate)
+        values
+            (#{deptId}, #{deptCode}, #{pid}, #{parent}, #{chiefId}, #{name}, ${lft}, ${rgt}, LINESTRING(POINT(0, ${lft}), POINT(0,${rgt})), #{enabled}, now(), now())
+    </insert>
+
+    <update id="updateDept">
+        update table_dept
+        set
+            chiefid = #{chiefId},
+            deptcode = #{deptCode},
+            name = #{name},
+            updatedate = now()
+        where
+            deptid = #{deptId}
+    </update>
+
+    <select id="countOwningDept" resultType="int">
+        select
+            count(*)
+        from
+            table_dept
+        where
+            chiefid = #{userId}
+    </select>
+
+    <select id="countManagingDept" resultType="int">
+        select
+            count(*)
+        from
+            table_dept_admin
+        where
+            userid = #{userId}
+    </select>
+
+    <delete id="deleteDeptManager">
+        delete from table_dept_admin
+        where
+            deptid = #{deptId}
+            and
+            userid in
+            <foreach collection="ids" item="id" index="index" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+    </delete>
+
+    <insert id="insertDeptManager">
+        insert into table_dept_admin
+            (deptid, userid, assigndate)
+        values
+            (#{deptId}, #{userId}, now())
+    </insert>
+
+    <insert id="insertDeptMember">
+        insert into table_dept_member
+            (deptid, userid, assigndate)
+        values
+            (#{deptId}, #{userId}, now())
+    </insert>
+</mapper>

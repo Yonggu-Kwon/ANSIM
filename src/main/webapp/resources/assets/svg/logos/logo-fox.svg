@@ -1,0 +1,35 @@
+<svg width="780" height="200" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <g stroke="null">
+   <g stroke="null">
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m46.41452,54.46902l-13.95968,-32.34516c-2.11694,-4.90242 0.2379,-7.18387 5.27661,-5.08548l38.10887,15.86613"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m199.20403,58.19321l15.56774,-36.06935c2.11694,-4.90242 -0.2379,-7.18387 -5.27661,-5.08548l-39.95,16.63306"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m46.05403,103.2916l-24.05403,-7.24677l23.65323,-5.80323c-2.87339,-4.98387 -4.43548,-10.34194 -4.43548,-15.91935c0,-26.72258 35.85161,-48.3871 80.07661,-48.3871s80.07661,21.66452 80.07661,48.3871c0,5.46452 -1.49919,10.71613 -4.2621,15.61613l24.89113,6.10645l-24.47339,7.37339"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m118.46855,95.04563c-0.325,-2.24919 -0.9121,-4.51371 -1.77903,-6.74274c-5.22661,-13.43226 -18.63952,-20.47258 -29.95968,-15.72419c-11.31935,4.74839 -16.25887,19.48871 -11.03226,32.92419c0.37016,0.95161 0.78145,1.87016 1.22984,2.75565"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m128.75242,95.07789c0.32419,-2.25968 0.9129,-4.53548 1.78387,-6.775c5.22661,-13.43226 18.63952,-20.47258 29.95968,-15.72419c11.31935,4.74839 16.25887,19.48871 11.03226,32.92419c-0.43468,1.11694 -0.92581,2.18952 -1.46694,3.21532"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m158.67258,102.84321c1.27661,-1.63952 2.0371,-3.70081 2.0371,-5.94032c0,-5.34516 -4.33226,-9.67742 -9.67742,-9.67742s-9.67742,4.33226 -9.67742,9.67742"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m105.75161,98.42547c0.07903,-0.49597 0.11935,-1.00484 0.11935,-1.52258c0,-5.34516 -4.33226,-9.67742 -9.67742,-9.67742s-9.67742,4.33226 -9.67742,9.67742c0,2.25 0.76774,4.32016 2.05484,5.96371"/>
+    <path stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" d="m109.0871,172.12386c-2.1121,-2.04516 -4.09597,-4.66855 -5.87823,-7.87016l-15.75323,-28.29677c-9.76048,-2.69355 -29.92823,-6.9629 -43.80403,-1.09355l3.0621,-14.07581l-15.03629,3.30968l20.95726,-26.08145l14.7,9.12581c3.0121,1.86935 7.98629,2.07903 11.17097,0.5629c0,0 18.88871,-10.80081 43.49435,-10.80081c24.60565,0 43.49435,10.80081 43.49435,10.80081c3.15726,1.55806 8.14839,1.3129 11.17097,-0.5629l14.7,-9.12581l20.95726,26.08145l-15.03548,-3.30968l3.0621,14.07581c-15.00242,-6.34677 -37.35806,-0.83952 -45.96532,1.71371l-15.40968,27.67742c-1.23468,2.21694 -2.56532,4.15726 -3.96774,5.81935"/>
+    <ellipse stroke="#000000" stroke-miterlimit="10" stroke-linejoin="round" stroke-linecap="round" stroke-width="8" fill="none" clip-rule="evenodd" fill-rule="evenodd" ry="9.67742" rx="12.90323" cy="174.32224" cx="122"/>
+   </g>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+   <g stroke="null"/>
+  </g>
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="'Asap'" font-size="120" id="svg_2" y="143.37894" x="244" stroke-width="0" stroke="#000" fill="#000000">FOX-USB</text>
+ </g>
+</svg>
