@@ -46,6 +46,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public MemberVO readSetupMember() {
+        return memberMapper.readSetupMember();
+    }
+
+    @Override
     public int insertMember(MemberVO member, HttpServletRequest request) {
         memberMapper.insertMember(member);
 
@@ -74,5 +79,10 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return 1;
+    }
+
+    @Override
+    public int updateSetupAdmin(MemberVO member) {
+        return memberMapper.updateSetupAdmin(member);
     }
 }

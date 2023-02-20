@@ -276,6 +276,24 @@ public class WebUtil {
         return value;
     }
 
+    public static int getIntVal(String paramName, HashMap<String, String> paramMap) {
+        String value = paramMap.get(paramName);
+        int retVal = 0;
+
+        if(value == null) {
+            return retVal;
+        }
+
+        try {
+            retVal = Integer.parseInt(value.trim());
+        }
+        catch(Exception ignored) {
+
+        }
+
+        return retVal;
+    }
+
     public static SystemConfigFactory extractSystemConfig(HashMap<String, String> paramMap) {
         SystemConfigFactory factory = new SystemConfigFactory();
 

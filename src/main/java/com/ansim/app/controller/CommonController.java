@@ -1,6 +1,9 @@
 package com.ansim.app.controller;
 
+import com.ansim.app.domain.AgentVO;
+import com.ansim.app.domain.MemberVO;
 import com.ansim.app.factory.SystemConfigFactory;
+import com.ansim.app.service.AgentService;
 import com.ansim.app.service.ConfigService;
 import com.ansim.app.service.MemberService;
 import lombok.Setter;
@@ -25,6 +28,9 @@ public class CommonController {
     @Setter(onMethod_ = { @Autowired })
     private ConfigService configService;
 
+    @Setter(onMethod_ = { @Autowired })
+    AgentService agentService;
+
     @RequestMapping(value = "/custom404")
     public String error404(Model model, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
@@ -42,7 +48,12 @@ public class CommonController {
             return "redirect:/setup";
         }
 
-        return "redirect:/usr/dashboard";
+        MemberVO member = (MemberVO) session.getAttribute("member");
+        if(member != null) {
+            return "redirect:/usr/dashboard";
+        }
+
+        return "redirect:/login";
     }
 
     @RequestMapping(value = "/setup", method = RequestMethod.GET)
@@ -55,10 +66,30 @@ public class CommonController {
         SystemConfigFactory serviceFactory = configService.loadSystemConfig("service");
         SystemConfigFactory mailFactory = configService.loadSystemConfig("mail");
 
+        MemberVO admin = memberService.readSetupMember();
+        AgentVO agent = null;
+        if(admin != null) {
+            agent = agentService.readSetupAgent(admin.getUserId());
+        }
         model.addAttribute("company", companyFactory.getAsHashMap());
         model.addAttribute("service", serviceFactory.getAsHashMap());
         model.addAttribute("mail", mailFactory.getAsHashMap());
+        model.addAttribute("admin", admin);
+        model.addAttribute("agent", agent);
 
         return "setup";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login(Model model, HttpServletRequest request, HttpSession session) {
+        if(!memberService.isInstalled()) {
+            return "redirect:/setup";
+        }
+
+        SystemConfigFactory serviceFactory = configService.loadSystemConfig("service");
+
+        model.addAttribute("service", serviceFactory.getAsHashMap());
+
+        return "login";
     }
 }

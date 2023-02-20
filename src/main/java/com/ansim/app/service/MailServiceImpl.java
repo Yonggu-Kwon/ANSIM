@@ -39,7 +39,7 @@ public class MailServiceImpl implements MailService {
         sender.setUsername(mailFactory.getStringValue("sMailAccount"));
         sender.setPassword(mailFactory.getStringValue("pMailPassword"));
         sender.setPort(mailFactory.getIntValue("nMailPort"));
-        sender.setProtocol("smtps");
+        sender.setProtocol("smtp");
         sender.setDefaultEncoding("UTF-8");
 
 

@@ -41,7 +41,7 @@ public class PasswordUtil {
                     token = "";
                 }
 
-                if(token.equals("")) {
+                if(!token.equals("")) {
                     if (regSerial.indexOf(token) != -1) {
                         return serialError;
                     }

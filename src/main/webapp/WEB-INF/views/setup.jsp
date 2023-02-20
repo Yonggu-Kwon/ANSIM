@@ -233,7 +233,7 @@
                                     <div class="d-flex align-items-center">
                                         <button type="button"
                                                 id="btnServicePrev"
-                                                class="btn btn-sm btn-ghost-secondary mr-2"
+                                                class="btn btn-sm btn-outline-secondary mr-2"
                                                 data-hs-step-form-prev-options='{
                                                      "targetSelector": "#stepCompany"
                                                    }'
@@ -267,7 +267,15 @@
                                             <label for="sMailServer" class="col-sm-3 col-form-label col-form-label-sm input-label">서버주소</label>
 
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control form-control-sm" name="sMailServer" id="sMailServer" value="${mail.sMailServer}" placeholder="서버주소" aria-label="sMailServer">
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       name="sMailServer"
+                                                       id="sMailServer"
+                                                       value="${mail.sMailServer}"
+                                                       placeholder="서버주소"
+                                                       aria-label="sMailServer"
+                                                       maxlength="128"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -277,7 +285,15 @@
                                             <label for="nMailPort" class="col-sm-3 col-form-label col-form-label-sm input-label">포트번호</label>
 
                                             <div class="col-sm-9">
-                                                <input type="number" class="form-control form-control-sm" name="nMailPort" id="nMailPort" value="${mail.nMailPort}" placeholder="포트번호" aria-label="nMailPort" maxlength="5">
+                                                <input type="number"
+                                                       class="form-control form-control-sm"
+                                                       name="nMailPort"
+                                                       id="nMailPort"
+                                                       value="${mail.nMailPort}"
+                                                       placeholder="포트번호"
+                                                       aria-label="nMailPort"
+                                                       maxlength="5"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -287,7 +303,15 @@
                                             <label for="sMailAccount" class="col-sm-3 col-form-label col-form-label-sm input-label">아이디</label>
 
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control form-control-sm" name="sMailAccount" id="sMailAccount" value="${mail.sMailAccount}" placeholder="아이디" aria-label="sMailAccount">
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       name="sMailAccount"
+                                                       id="sMailAccount"
+                                                       value="${mail.sMailAccount}"
+                                                       placeholder="아이디"
+                                                       aria-label="sMailAccount"
+                                                       maxlength="32"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -303,7 +327,7 @@
                                                        id="pMailPassword"
                                                        placeholder="비밀번호"
                                                        aria-label="비밀번호"
-                                                       required
+                                                       maxlength="32"
                                                 >
                                             </div>
                                         </div>
@@ -320,7 +344,7 @@
                                                        id="pConfPassword"
                                                        placeholder="비밀번호 확인"
                                                        aria-label="비밀번호 확인"
-                                                       required
+                                                       maxlength="32"
                                                 >
                                             </div>
                                         </div>
@@ -334,7 +358,15 @@
                                             </label>
 
                                             <div class="col-sm-9">
-                                                <input type="email" class="form-control form-control-sm" name="sMailSender" id="sMailSender" value="${mail.sMailSender}" placeholder="발신주소" aria-label="sMailSender">
+                                                <input type="email"
+                                                       class="form-control form-control-sm"
+                                                       name="sMailSender"
+                                                       id="sMailSender"
+                                                       value="${mail.sMailSender}"
+                                                       placeholder="발신주소"
+                                                       aria-label="sMailSender"
+                                                       maxlength="256"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -346,7 +378,7 @@
                                     <div class="d-flex align-items-center">
                                         <button type="button"
                                                 id="btnMailPrev"
-                                                class="btn btn-sm btn-ghost-secondary mr-2"
+                                                class="btn btn-sm btn-outline-secondary mr-2"
                                                 data-hs-step-form-prev-options='{
                                                      "targetSelector": "#stepService"
                                                    }'
@@ -387,7 +419,18 @@
                                             <label for="sUserId" class="col-sm-3 col-form-label col-form-label-sm input-label">아이디</label>
 
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control form-control-sm" name="sUserId" id="sUserId" maxlength="32" placeholder="5 ~ 32문자의 길이로 숫자 및 영문자" aria-label="sUserId">
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       name="sUserId"
+                                                       id="sUserId"
+                                                <c:if test="${admin != null}">
+                                                        value = "${admin.userId}"
+                                                       readonly
+                                                </c:if>
+                                                       maxlength="32"
+                                                       placeholder="5 ~ 32문자의 길이로 숫자 및 영문자"
+                                                       aria-label="sUserId"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -397,7 +440,17 @@
                                             <label for="sEmail" class="col-sm-3 col-form-label col-form-label-sm input-label">이메일</label>
 
                                             <div class="col-sm-9">
-                                                <input type="email" class="form-control form-control-sm" name="sEmail" id="sEmail" maxlength="256" placeholder="이메일" aria-label="sEmail">
+                                                <input type="email"
+                                                       class="form-control form-control-sm"
+                                                       name="sEmail"
+                                                       id="sEmail"
+                                                <c:if test="${admin != null}">
+                                                       value = "${admin.email}"
+                                                </c:if>
+                                                       maxlength="256"
+                                                       placeholder="이메일"
+                                                       aria-label="sEmail"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -407,7 +460,17 @@
                                             <label for="sUserName" class="col-sm-3 col-form-label col-form-label-sm input-label">이름</label>
 
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control form-control-sm" name="sUserName" id="sUserName" maxlength="100" placeholder="이름" aria-label="sUserName">
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       name="sUserName"
+                                                       id="sUserName"
+                                                <c:if test="${admin != null}">
+                                                       value = "${admin.userName}"
+                                                </c:if>
+                                                       maxlength="100"
+                                                       placeholder="이름"
+                                                       aria-label="sUserName"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -417,7 +480,17 @@
                                             <label for="sCellNo" class="col-sm-3 col-form-label col-form-label-sm input-label">휴대전화</label>
 
                                             <div class="col-sm-9">
-                                                <input type="text" class="form-control form-control-sm" name="sCellNo" id="sCellNo" maxlength="50" placeholder="휴대전화" aria-label="sCellNo">
+                                                <input type="text"
+                                                       class="form-control form-control-sm"
+                                                       name="sCellNo"
+                                                       id="sCellNo"
+                                                <c:if test="${admin != null}">
+                                                       value = "${admin.cellNo}"
+                                                </c:if>
+                                                       maxlength="50"
+                                                       placeholder="휴대전화"
+                                                       aria-label="sCellNo"
+                                                >
                                             </div>
                                         </div>
                                         <!-- End Form Group -->
@@ -463,7 +536,7 @@
                                     <div class="d-sm-flex align-items-center">
                                         <button type="button"
                                                 id="btnAdminPrev"
-                                                class="btn btn-sm btn-ghost-secondary mb-3 mb-sm-0 mr-2"
+                                                class="btn btn-sm btn-outline-secondary mb-3 mb-sm-0 mr-2"
                                                 data-hs-step-form-prev-options='{
                                                      "targetSelector": "#stepMail"
                                                    }'
@@ -472,7 +545,16 @@
                                         </button>
 
                                         <div class="d-flex justify-content-end ml-auto">
-                                            <button id="btnSetupFinish" type="button" class="btn btn-sm btn-primary">저장</button>
+                                            <button id="btnSaveAdmin" type="button" class="btn btn-sm btn-primary mr-1">저장</button>
+                                            <button id="btnSetupFinish"
+                                                    type="button"
+                                                    class="btn btn-sm btn-dark"
+                                                    <c:if test="${admin == null}">
+                                                    style="display: none"
+                                                    </c:if>
+                                            >
+                                                완료
+                                            </button>
                                         </div>
                                     </div>
                                     <!-- End Footer -->
@@ -485,14 +567,45 @@
                                 <div class="text-center">
                                     <img class="img-fluid mb-3" src="${pageContext.request.contextPath}/resources/assets/svg/illustrations/undraw_work_together_h63l.svg" alt="설정완료" style="max-width: 15rem;">
 
-                                    <div class="mb-4">
+                                    <div class="mb-4 justify-content-center">
                                         <h2>시스템 설정 완료</h2>
-                                        <p><c:out value="${service.sServiceName}"/>의 시스템 설정이 완료되었습니다.</p>
+                                        <p><c:out value="${service.sServiceName}"/>의 시스템 설정이 완료되었습니다.<br>다음의 설치코드를 이용하여 PC에이전트를 설치한 후 접속할 수 있습니다.</p>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-3"></div>
+                                        <div class="col-6">
+                                            <!-- Input Group -->
+                                            <div class="input-group input-group-merge text-center">
+                                                <input type="text"
+                                                       id="code"
+                                                       class="form-control"
+                                                       readonly
+                                                <c:if test="${agent != null}">
+                                                       value="${agent.code}"
+                                                </c:if>
+                                                >
+
+                                                <a class="js-clipboard input-group-append" href="javascript:;"
+                                                   data-hs-clipboard-options='{
+                                                           "contentTarget": "#code",
+                                                           "classChangeTarget": "#iconExampleLinkIcon",
+                                                           "defaultClass": "tio-copy",
+                                                           "successClass": "tio-done"
+                                                         }'>
+                                                    <span class="input-group-text">
+                                                      <span id="iconExampleLinkIcon" class="tio-copy"></span>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <!-- End Input Group -->
+                                        </div>
+                                        <div class="col-3"></div>
                                     </div>
 
                                     <div class="d-flex justify-content-center">
-                                        <a class="btn btn-sm btn-primary" href="${pageContext.request.contextPath}/">
-                                            <i class="tio-sign-in mr-1"></i> 사용하기
+                                        <a class="btn btn-sm btn-primary" href="${pageContext.request.contextPath}/agent">
+                                            <i class="tio-download mr-1"></i> PC에이전트 다운로드
                                         </a>
                                     </div>
                                 </div>
@@ -521,6 +634,55 @@
 </main>
 <!-- ========== END MAIN CONTENT ========== -->
 
+<!-- Modal -->
+<div id="modalMailTest" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalMailTest" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">메일테스트</h5>
+                <button type="button" class="btn btn-xs btn-icon btn-ghost-secondary" data-dismiss="modal" aria-label="Close">
+                    <i class="tio-clear tio-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="js-validate"
+                      id="formMailTest"
+                >
+                    <div class="mb-3 font-size-sm">
+                        <blockquote class="blockquote">
+                            <small>
+                                메일서버 설정내용을 적용하여 실제 메일이 정상적으로 발송되는지 확인할 수 있습니다. 아래 메일을 수신할 이메일 주소를 입력한 후 <b>테스트</b> 버튼을 클릭하세요.
+                            </small>
+                        </blockquote>
+                    </div>
+                    <!-- Form Group -->
+                    <div class="js-form-message form-group mb-2">
+                        <label class="input-label" for="testEmail">이메일</label>
+
+                        <input type="email"
+                               class="form-control form-control-sm"
+                               name="testEmail"
+                               id="testEmail"
+                               tabindex="1"
+                               placeholder="이메일주소"
+                               aria-label="testEmail"
+                               required
+                               data-msg="유효한 이메일주소를 입력하세요."
+                               maxlength="256"
+                        >
+                    </div>
+                    <!-- End Form Group -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-xs btn-modal-test">테스트</button>
+                <button type="button" class="btn btn-white btn-xs" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
 <%@include file="/include/common_modal.jsp"%>
 
 <!-- JS Global Compulsory  -->
@@ -530,10 +692,9 @@
 
 <!-- JS Implementing Plugins -->
 <script src="${pageContext.request.contextPath}/resources/assets/vendor/hs-step-form/dist/hs-step-form.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/assets/vendor/hs-file-attach/dist/hs-file-attach.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/assets/vendor/hs-toggle-password/dist/js/hs-toggle-password.js"></script>
 <script src="${pageContext.request.contextPath}/resources/assets/vendor/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/assets/vendor/@yaireo/tagify/dist/jQuery.tagify.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/assets/vendor/clipboard/dist/clipboard.js"></script>
 
 <!-- JS Front -->
 <script src="${pageContext.request.contextPath}/resources/assets/js/theme.min.js"></script>

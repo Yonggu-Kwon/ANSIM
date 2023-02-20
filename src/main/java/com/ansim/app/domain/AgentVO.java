@@ -7,6 +7,7 @@ import lombok.Data;
 public class AgentVO {
     private String agentId;
     private String userId;
+    private String ip;
     private String version;
     private String type;
     private String path;

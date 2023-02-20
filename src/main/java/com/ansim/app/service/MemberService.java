@@ -10,5 +10,7 @@ public interface MemberService {
 
     public MemberVO readMemberById(String userId, boolean includeDeleted);
     public MemberVO readMemberByEmail(String email, boolean includeDeleted);
+    public MemberVO readSetupMember();
     public int insertMember(MemberVO member, HttpServletRequest request);
+    public int updateSetupAdmin(MemberVO member);
 }

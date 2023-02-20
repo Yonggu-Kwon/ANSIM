@@ -49,7 +49,7 @@
 
         <association
                 property="position"
-                column="{userId = userId}"
+                column="{positionId = positionId}"
                 javaType="com.ansim.app.domain.PositionVO"
                 select="getMemberPosition"
         />
@@ -64,7 +64,7 @@
     </resultMap>
 
     <select id="getMemberPosition" resultType="com.ansim.app.domain.PositionVO">
-        select * from table_position where userid = #{userId}
+        select * from table_position where positionId = #{positionId}
     </select>
 
     <select id="getMemberAuthList" resultType="com.ansim.app.domain.AuthVO">
@@ -83,6 +83,6 @@
         insert into table_log
             (userid, username, category, action, ip, agent, result, reason, createdate)
         values
-            (#{userId}, #{userName}, #{category}, #{action}, #{ip}, #{agent}, #{result}, #{reason} now())
+            (#{userId}, #{userName}, #{category}, #{action}, #{ip}, #{agent}, #{result}, #{reason}, now())
     </insert>
 </mapper>

@@ -21,7 +21,7 @@
 
         <association
                 property="position"
-                column="{userId = userId}"
+                column="{positionId = positionId}"
                 javaType="com.ansim.app.domain.PositionVO"
                 select="getMemberPosition"
         />
@@ -36,7 +36,7 @@
     </resultMap>
 
     <select id="getMemberPosition" resultType="com.ansim.app.domain.PositionVO">
-        select * from table_position where userid = #{userId}
+        select * from table_position where positionId = #{positionId}
     </select>
 
     <select id="getMemberAuthList" resultType="com.ansim.app.domain.AuthVO">
@@ -57,6 +57,21 @@
             and
             agent.status = 'N'
         ]]>
+    </select>
+
+    <select id="readSetupMember" resultMap="memberMap">
+        select
+            member.*
+        from
+            table_member member
+            inner join
+            table_auth auth
+            on (auth.userid = member.userid and auth.auth = 'ROLE_ADMIN')
+        where
+            member.deletedate is null
+        order by
+            member.createdate asc
+        limit 1 offset 0
     </select>
 
     <select id="readMember" resultMap="memberMap">
@@ -95,15 +110,29 @@
         insert into table_member
             (userid, username, password, email, cellno, uuid, otpkey, positionid, status, salt, createdate, updatedate, deletedate)
         values
-            (#{userId}, #{userName}, #{password}, #{email}, #{cellNo}, #{uuid}, #{otpKey}, #{positionId}, #{status}, now(), now(), null);
+            (#{userId}, #{userName}, #{password}, #{email}, #{cellNo}, #{uuid}, #{otpKey}, #{positionId}, #{status}, #{salt}, now(), now(), null);
 
-        <if test="authList">
+        <if test="authList != null">
             <foreach collection="authList" item="auth" index="index">
                 insert into table_auth
                 (userid, auth, createdate)
                 values
-                (#{userId}, #{auth}, now());
+                (#{auth.userId}, #{auth.auth}, now());
             </foreach>
         </if>
     </insert>
+
+    <update id="updateSetupAdmin">
+        update table_member
+        set
+            userid = #{userId},
+            username = #{userName},
+            password = #{password},
+            email = #{email},
+            cellno = #{cellNo},
+            salt = #{salt},
+            updatedate = now()
+        where
+            userid = #{userId}
+    </update>
 </mapper>

@@ -6,6 +6,7 @@ import lombok.Data;
 public class ErrorVO {
     public final static int ERROR_OK = 0;
 
+    public final static int ERROR_SETUP_ADMIN_ISNOT_MATCH = 1;
     public final static int ERROR_PROCESS_FAILED = 99;
     public final static int ERROR_INVALID_PARAM = 100;
 
@@ -26,6 +27,7 @@ public class ErrorVO {
     public static String getMessage(int code) {
         String msg = "서버에서 알 수 없는 오류가 발생했습니다.";
         switch (code) {
+            case ERROR_SETUP_ADMIN_ISNOT_MATCH: msg = "이미 시스템 설정을 완료한 관리자와 아이디가 일치하지 않습니다."; break;
             case ERROR_PROCESS_FAILED:      msg = "요청을 처리하는 과정에서 오류가 발생했습니다.";              break;
             case ERROR_INVALID_PARAM:       msg = "요청을 처리하기 위한 데이터가 올바르게 제공되지 않았습니다.";  break;
             case ERROR_NEWPASS_IS_CURPASS:  msg = "신규 비밀번호는 현재 비밀번호와 다르게 지정해야 합니다."; break;

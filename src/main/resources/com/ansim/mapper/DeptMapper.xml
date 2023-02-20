@@ -21,7 +21,7 @@
 
         <association
                 property="position"
-                column="{userId = userId}"
+                column="{positionId = positionId}"
                 javaType="com.ansim.app.domain.PositionVO"
                 select="getMemberPosition"
         />
@@ -186,7 +186,7 @@
     </select>
 
     <select id="getMemberPosition" resultType="com.ansim.app.domain.PositionVO">
-        select * from table_position where userid = #{userId}
+        select * from table_position where positionid = #{positionId}
     </select>
 
     <select id="getMemberAuthList" resultType="com.ansim.app.domain.AuthVO">

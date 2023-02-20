@@ -52,6 +52,7 @@ create table table_agent
     agentid     varchar(50)  not null comment '아이디'
         primary key,
     userid      varchar(100) null comment '사용자 아이디',
+    ip          varchar(50)  null comment 'IP주소',
     version     varchar(50)  null comment '에이전트 버전',
     type        varchar(16)  null comment '에이전트 유형(PC, USB)',
     path        varchar(256) null comment '설치위치',

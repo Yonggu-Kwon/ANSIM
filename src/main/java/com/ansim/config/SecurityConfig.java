@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,28 +38,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/resources/**");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .exceptionHandling()
-                    .accessDeniedHandler(accessDeniedHandler())
-                    .and()
                 .authorizeRequests()
-                    .antMatchers("/", "/**", "/inf", "/inf/**", "/resources", "/resources/**").permitAll()
-                    .antMatchers("/sys", "/sys/**").hasRole("ADMIN")
-                    .antMatchers("/grp", "/grp/**").hasAnyRole("ADMIN", "GROUP")
-                    .antMatchers("/usr", "/usr/**").hasAnyRole("ADMIN", "GROUP", "MEMBER")
-                    .anyRequest().authenticated()
-                    .and()
+                .antMatchers("/", "/setup", "/login", "/agent", "/inf/**").permitAll()
+                .antMatchers("/sys", "/sys/**").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/grp", "/grp/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_GROUP')")
+                .antMatchers("/usr", "/usr/**").access("hasAnyRole('ROLE_ADMIN', 'ROLE_GROUP', 'ROLE_MEMBER')")
+                .anyRequest().authenticated();
+
+        http
                 .formLogin()
-                    .loginPage("/login").defaultSuccessUrl("/usr").permitAll()
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .successHandler(loginSuccessHandler())
-                    .failureHandler(loginFailureHandler())
-                    .and()
+                .loginPage("/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .successHandler(loginSuccessHandler())
+                .failureHandler(loginFailureHandler());
+
+        http
                 .logout()
-                    .logoutSuccessHandler(logoutSuccessHandler())
-                    .permitAll();
+                .logoutSuccessHandler(logoutSuccessHandler());
+
+        http
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler());
+
     }
 
     @Override

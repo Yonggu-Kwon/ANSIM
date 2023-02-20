@@ -1,3 +1,33 @@
+let showMailTestModal = function showMailTestModal(callback) {
+    let modal = new bootstrap.Modal(document.getElementById('modalMailTest'), {backdrop: 'static'});
+
+    $("#modalMailTest").off("shown.bs.modal").on("shown.bs.modal", function(e) {
+        $("#testEmail").focus().select();
+    });
+
+    $("#testEmail").val("");
+
+    $("#modalMailTest").find(".btn-modal-test").off("click").on("click", function(e) {
+        e.preventDefault();
+        if($("#testEmail").hasClass("is-valid")) {
+            callback($("#modalMailTest"), modal);
+        }
+        else {
+            $("#testEmail").valid();
+            $("#testEmail").focus().select()
+        }
+    });
+
+    $("#testEmail").unbind("keydown").bind("keydown", function(e) {
+        if(e.keyCode === 13 && $(this).val() !== "" && $(this).hasClass("is-valid")) {
+            e.preventDefault();
+            callback($("#modalMailTest"), modal);
+        }
+    });
+
+    modal.show();
+}
+
 $(document).on('ready', function () {
     // initialization of tagify
     $('.js-tagify').each(function () {
@@ -5,8 +35,23 @@ $(document).on('ready', function () {
             originalInputValueFormat: valuesArr => valuesArr.map(item => item.value).join(',')
         });
 
+        tagify.on("keydown", function (e) {
+            if(e.detail.originalEvent.keyCode === 13 && $(e.detail.tagify.DOM.input).html().trim() === "") {
+                $("#sCopyright").focus().select();
+            }
+        });
         $(this).data("tagify", tagify);
     });
+
+    // initialization of clipboard
+    $('.js-clipboard').each(function() {
+        $.HSCore.components.HSClipboard.init(this);
+    });
+
+    $('.js-validate').each(function() {
+        $.HSCore.components.HSValidation.init($(this));
+    });
+
 
     $("#btnCompanyNext").on("click", function (e) {
         e.preventDefault();
@@ -75,7 +120,7 @@ $(document).on('ready', function () {
                     e.stopImmediatePropagation();
                     showCloseModal(
                         "회사정보 입력",
-                        "회사정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                        `회사정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>${(!res) ? '서버오류' : res.msg}</small>`,
                         function () {
                             $("#btnServicePrev").trigger("click");
                         }
@@ -92,7 +137,7 @@ $(document).on('ready', function () {
                 e.stopImmediatePropagation();
                 showCloseModal(
                     "회사정보 입력",
-                    "회사정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                    "회사정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>통신오류</small>",
                     function () {
                         $("#btnServicePrev").trigger("click");
                     }
@@ -176,9 +221,9 @@ $(document).on('ready', function () {
                     e.stopImmediatePropagation();
                     showCloseModal(
                         "서비스정보 입력",
-                        "서비스정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                        `서비스정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>${(!res) ? '서버오류' : res.msg}</small>`,
                         function () {
-                            $("#sServiceName").focus().select();
+                            $("#btnMailPrev").trigger("click");
                         }
                     );
                     return;
@@ -196,9 +241,9 @@ $(document).on('ready', function () {
                 e.stopImmediatePropagation();
                 showCloseModal(
                     "서비스정보 입력",
-                    "서비스정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                    "서비스정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>통신오류</small>",
                     function () {
-                        $("#sServiceName").focus().select();
+                        $("#btnMailPrev").trigger("click");
                     }
                 )
             }
@@ -278,6 +323,30 @@ $(document).on('ready', function () {
             return;
         }
 
+        if($("#pConfPassword").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일서버 설정",
+                "확인용 비밀번호를 입력하세요.",
+                function () {
+                    $("#pConfPassword").focus().select();
+                }
+            );
+            return;
+        }
+
+        if($("#pMailPassword").val() !== $("#pConfPassword").val()) {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일서버 설정",
+                "확인용 비밀번호가 일치하지 않습니다.",
+                function () {
+                    $("#pConfPassword").focus().select();
+                }
+            );
+            return;
+        }
+
         if($("#sMailSender").val() === "") {
             e.stopImmediatePropagation();
             showCloseModal(
@@ -306,36 +375,38 @@ $(document).on('ready', function () {
             return;
         }
 
-        let formData = new FormData();
-
-        formData.append("category", "mail");
-        formData.append("sMailServer", $("#sMailServer").val());
-        formData.append("nMailPort", $("#nMailPort").val());
-        formData.append("sMailAccount", $("#sMailAccount").val());
-        formData.append("pMailPassword", $("#pMailPassword").val());
-        formData.append("sMailSender", $("#sMailSender").val());
-        formData.append("bMailSsl", "0");
-
         $.ajax({
-            url         : `${PAGE_PARAM.context}/interface/setup/save`,
+            url         : `${PAGE_PARAM.context}/inf/setup/save`,
             type        : "POST",
-            processData : false,
-            contentType : false,
-            async       : false,
-            data        : formData,
+            data        : {
+                "category"      : "mail",
+                "sMailServer"   : $("#sMailServer").val(),
+                "nMailPort"     : $("#nMailPort").val(),
+                "sMailAccount"  : $("#sMailAccount").val(),
+                "pMailPassword" : window.btoa($("#sMailAccount").val() + "," + $("#pMailPassword").val()),
+                "pConfPassword" : window.btoa($("#sMailAccount").val() + "," + $("#pConfPassword").val()),
+                "sMailSender"   : $("#sMailSender").val()
+            },
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(PAGE_PARAM.csrf.header, PAGE_PARAM.csrf.token);
+            },
             success: function (res) {
                 if(!res || res.code !== 0) {
                     e.stopImmediatePropagation();
+                    $("#pMailPassword").val("");
+                    $("#pConfPassword").val("");
                     showCloseModal(
                         "메일설정 입력",
-                        "메일설정 정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                        `메일설정 정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>${(!res) ? '서버오류' : res.msg}</small>`,
                         function () {
-                            $("#sMailServer").focus().select();
+                            $("#btnAdminPrev").trigger("click");
                         }
                     );
                     return;
                 }
                 else {
+                    $("#pMailPassword").val("");
+                    $("#pConfPassword").val("");
                     setTimeout(function() {
                         $("#sUserId").focus().select();
                     }, 500);
@@ -343,15 +414,195 @@ $(document).on('ready', function () {
             },
             error: function(xhr, status, error) {
                 e.stopImmediatePropagation();
+                $("#pMailPassword").val("");
+                $("#pConfPassword").val("");
                 showCloseModal(
                     "메일설정 입력",
-                    "메일설정 정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                    "메일설정 정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>통신오류</small>",
                     function () {
-                        $("#sMailServer").focus().select();
+                        $("#btnAdminPrev").trigger("click");
                     }
                 )
             }
         });
+    });
+
+    $("#btnMailTest").on("click", function (e) {
+        e.preventDefault();
+        if($("#sMailServer").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일설정 테스트",
+                "메일서버의 주소를 입력하세요.",
+                function () {
+                    $("#sMailServer").focus().select();
+                }
+            );
+            return;
+        }
+
+        if($("#nMailPort").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일설정 테스트",
+                "메일서버의 포트번호를 입력하세요.",
+                function () {
+                    $("#nMailPort").focus().select();
+                }
+            );
+            return;
+        }
+
+        $("#nMailPort").val($("#nMailPort").val().trim());
+
+        let regOk = REGEX_PORT.test($("#nMailPort").val());
+        REGEX_PORT.test($("#nMailPort").val());
+        if(!regOk) {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일설정 테스트",
+                "메일서버의 포트번호가 유효하지 않습니다.",
+                function () {
+                    $("#nMailPort").focus().select();
+                }
+            );
+            return;
+        }
+
+
+        if($("#sMailAccount").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일설정 테스트",
+                "메일서버의 아이디를 입력하세요.",
+                function () {
+                    $("#sMailAccount").focus().select();
+                }
+            );
+            return;
+        }
+
+        if($("#pMailPassword").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일설정 테스트",
+                "메일서버의 비밀번호를 입력하세요.",
+                function () {
+                    $("#pMailPassword").focus().select();
+                }
+            );
+            return;
+        }
+
+        if($("#pConfPassword").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일서버 설정",
+                "확인용 비밀번호를 입력하세요.",
+                function () {
+                    $("#pConfPassword").focus().select();
+                }
+            );
+            return;
+        }
+
+        if($("#pMailPassword").val() !== $("#pConfPassword").val()) {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일서버 설정",
+                "확인용 비밀번호가 일치하지 않습니다.",
+                function () {
+                    $("#pConfPassword").focus().select();
+                }
+            );
+            return;
+        }
+
+        if($("#sMailSender").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "메일설정 테스트",
+                "메일발송시 사용할 보내는이의 메일주소를 입력하세요.",
+                function () {
+                    $("#sMailSender").focus().select();
+                }
+            );
+            return;
+        }
+
+        $("#sMailSender").val($("#sMailSender").val().trim());
+
+        regOk = REGEX_EMAIL.test($("#sMailSender").val());
+        REGEX_EMAIL.test($("#sMailSender").val());
+        if(!regOk) {
+            showCloseModal(
+                "메일설정 테스트",
+                "보내는이의 메일주소가 유효하지 않습니다.",
+                function () {
+                    $("#sMailSender").focus().select();
+                }
+            );
+            return;
+        }
+
+        let test_callback = function test_callback(modal, inst) {
+            modal.hide();
+            $.ajax({
+                url         : `${PAGE_PARAM.context}/inf/setup/mailtest`,
+                type        : "POST",
+                data        : {
+                    "server"   : $("#sMailServer").val(),
+                    "port"     : $("#nMailPort").val(),
+                    "account"  : $("#sMailAccount").val(),
+                    "password" : $("#pMailPassword").val(),
+                    "sender"   : $("#sMailSender").val(),
+                    "receiver" : $("#testEmail").val()
+                },
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader(PAGE_PARAM.csrf.header, PAGE_PARAM.csrf.token);
+                },
+                success: function (res) {
+                    if(!res || res.code !== 0) {
+                        showCloseModal(
+                            "메일설정 테스트",
+                            `메일설정을 테스트하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.<br><br><small>오류내용:</small> <small>${(!res) ? '서버오류' : res.msg}</small>`,
+                            function () {
+                                if(res && res.code === 102) {
+                                    location.href = `${PAGE_PARAM.context}/logout`;
+                                }
+                                else {
+                                    modal.show();
+                                    $("#testEmail").focus().select();
+                                }
+                            }
+                        );
+                        return;
+                    }
+                    else {
+                        inst.hide();
+                        showCloseModal(
+                            "메일설정 테스트",
+                            res.msg,
+                            function () {
+                                $("#testEmail").focus().select();
+                            }
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showCloseModal(
+                        "메일설정 테스트",
+                        "메일설정을 테스트하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.<br><br><small>오류내용:</small> <small>통신오류</small>",
+                        function () {
+                            modal.show();
+                            $("#testEmail").focus().select();
+                        }
+                    )
+                }
+            });
+        }
+
+        showMailTestModal(test_callback);
     });
 
     $("#btnAdminPrev").on("click", function (e) {
@@ -360,7 +611,7 @@ $(document).on('ready', function () {
         }, 500);
     });
 
-    $("#btnSetupFinish").on("click", function (e) {
+    $("#btnSaveAdmin").on("click", function (e) {
         e.preventDefault();
         if($("#sUserId").val() === "") {
             e.stopImmediatePropagation();
@@ -442,22 +693,6 @@ $(document).on('ready', function () {
             return;
         }
 
-        $("#sPhone").val($("#sPhone").val().trim());
-
-        regOk = REGEX_PHONENO.test($("#sPhone").val());
-        REGEX_PHONENO.test($("#sPhone").val());
-        if(!regOk) {
-            e.stopImmediatePropagation();
-            showCloseModal(
-                "관리자정보 입력",
-                "전화번호의 형식이 유효하지 않습니다.",
-                function () {
-                    $("#sPhone").focus().select();
-                }
-            );
-            return;
-        }
-
         if($("#sCellNo").val() === "") {
             e.stopImmediatePropagation();
             showCloseModal(
@@ -498,42 +733,76 @@ $(document).on('ready', function () {
             return;
         }
 
-        let formData = new FormData();
+        if($("#sConfPassword").val() === "") {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "관리자정보 입력",
+                "확인용 비밀번호를 입력하세요.",
+                function () {
+                    $("#sConfPassword").focus().select();
+                }
+            );
+            return;
+        }
 
-        formData.append("category", "admin");
-        formData.append("sUserId", $("#sUserId").val());
-        formData.append("sEmail", $("#sEmail").val());
-        formData.append("sUserName", $("#sUserName").val());
-        formData.append("sPhone", $("#sPhone").val());
-        formData.append("sCellNo", $("#sCellNo").val());
-        formData.append("sPassword", window.btoa($("#sUserId").val() + "," + $("#sPassword").val()));
-        formData.append("image", $("#picture").val() === "" ? "" : $("#picture")[0].files[0]);
+        if($("#sPassword").val() !== $("#sConfPassword").val()) {
+            e.stopImmediatePropagation();
+            showCloseModal(
+                "관리자정보 입력",
+                "확인용 비밀번호가 일치하지 않습니다.",
+                function () {
+                    $("#sConfPassword").focus().select();
+                }
+            );
+            return;
+        }
 
         $.ajax({
-            url         : `${PAGE_PARAM.context}/interface/setup/save`,
+            url         : `${PAGE_PARAM.context}/inf/setup/save`,
             type        : "POST",
-            processData : false,
-            contentType : false,
-            async       : false,
-            data        : formData,
+            data        : {
+                "category"      : "admin",
+                "sUserId"       : $("#sUserId").val(),
+                "sEmail"        : $("#sEmail").val(),
+                "sUserName"     : $("#sUserName").val(),
+                "sCellNo"       : $("#sCellNo").val(),
+                "sPassword"     : window.btoa($("#sUserId").val() + "," + $("#sPassword").val()),
+                "sConfPassword" : window.btoa($("#sUserId").val() + "," + $("#sConfPassword").val())
+            },
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(PAGE_PARAM.csrf.header, PAGE_PARAM.csrf.token);
+            },
             success: function (res) {
+                $("#sPassword").val("");
+                $("#sConfPassword").val("");
                 if(!res || res.code !== 0) {
                     e.stopImmediatePropagation();
                     showCloseModal(
                         "관리자정보 입력",
-                        "관리자정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                        `관리자정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>${(!res) ? '서버오류' : res.msg}</small>`,
                         function () {
                             $("#sUserId").focus().select();
                         }
                     );
                     return;
                 }
+                else {
+                    $("#code").val(res.installCode);
+                    // initialization of clipboard
+                    $('.js-clipboard').each(function() {
+                        $.HSCore.components.HSClipboard.init(this);
+                    });
+                    $("#btnSaveAdmin").hide();
+                    $("#btnSetupFinish").show().trigger("click");
+                }
             },
             error: function(xhr, status, error) {
+                $("#sPassword").val("");
+                $("#sConfPassword").val("");
                 e.stopImmediatePropagation();
                 showCloseModal(
                     "관리자정보 입력",
-                    "관리자정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요.",
+                    "관리자정보를 저장하는 과정에서 오류가 발생했습니다. 관리자에게 문의하세요. <br><br><small>오류내용:</small> <small>통신오류</small>",
                     function () {
                         $("#sUserId").focus().select();
                     }
@@ -556,13 +825,14 @@ $(document).on('ready', function () {
     initTextKeydownBind($("#sMailAccount"), true, $("#pMailPassword"), "focus");
     initTextKeydownBind($("#pMailPassword"), true, $("#pConfPassword"), "focus");
     initTextKeydownBind($("#pConfPassword"), true, $("#sMailSender"), "focus");
+    initTextKeydownBind($("#sMailSender"), true, $("#btnMailNext"), "click");
 
     initTextKeydownBind($("#sUserId"), true, $("#sEmail"), "focus");
     initTextKeydownBind($("#sEmail"), true, $("#sUserName"), "focus");
-    initTextKeydownBind($("#sUserName"), true, $("#sPhone"), "focus");
+    initTextKeydownBind($("#sUserName"), true, $("#sCellNo"), "focus");
     initTextKeydownBind($("#sCellNo"), true, $("#sPassword"), "focus");
     initTextKeydownBind($("#sPassword"), true, $("#sConfPassword"), "focus");
-    initTextKeydownBind($("#sConfPassword"), true, $("#btnSetupFinish"), "click");
+    initTextKeydownBind($("#sConfPassword"), true, $("#btnSaveAdmin"), "click");
 
     $('.js-step-form').each(function () {
         var stepForm = new HSStepForm($(this), {

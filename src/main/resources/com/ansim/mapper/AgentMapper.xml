@@ -6,8 +6,12 @@
 <mapper namespace="com.ansim.mapper.AgentMapper">
     <insert id="issueAgent">
         insert into table_agent
-        (agentid, userid, version, type, path, status, code, deletable, createdate, approvedate, stopdate, deletedate)
+        (agentid, userid, ip, version, type, path, status, code, deletable, createdate, approvedate, stopdate, deletedate)
         values
-        (#{agentId}, #{userId}, null, null, null, 'I', #{code}, '0', null, null, null, null)
+        (#{agentId}, #{userId}, #{ip}, null, null, null, 'I', #{code}, '0', null, null, null, null)
     </insert>
+
+    <select id="readSetupAgent" resultType="com.ansim.app.domain.AgentVO">
+        select * from table_agent where userid = #{userId} and createdate is null and status = 'I' limit 1 offset 0
+    </select>
 </mapper>

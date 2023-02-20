@@ -4,4 +4,5 @@ import com.ansim.app.domain.AgentVO;
 
 public interface AgentService {
     public int issueAgent(AgentVO agent);
+    public AgentVO readSetupAgent(String userId);
 }
